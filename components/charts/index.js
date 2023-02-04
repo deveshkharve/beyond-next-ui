@@ -125,9 +125,9 @@ export default function SleepStats({ data }) {
       {data && _.last(data).heartRateData ? <HeartRateChart data={_.last(data).heartRateData}/> : ''}
       <h4>Data for {data && _.last(data).startTimeDate}</h4>
       {data && _.last(data).hypnogram_reading > 2 ? <SleepStatusBarChart data={data && sleepStatusData(data)}/> : ''}
-      Asleep/In Bed: {data && Math.round(100 * _.last(data).durationAsleepState / _.last(data).durationInBed) || 100}%
-      WakeUps: {data && _.last(data).disturbance}
-      Min Heart Rate: {data && _.last(data).min_heart_rate_reading}
+      Asleep/In Bed: {data && Math.round(100 * _.last(data).durationAsleepState / _.last(data).durationInBed) || 100}%<br/>
+      WakeUps: {data && _.last(data).disturbance}<br/>
+      Min Heart Rate: {data && _.last(data).min_heart_rate_reading}<br/>
     </div>
   )
 }
