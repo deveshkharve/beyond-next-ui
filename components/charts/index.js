@@ -22,9 +22,10 @@ const HeartRateChart = ({data}) => {
   return (
     <div>
       <h4>Heart Rate</h4>
-      <LineChart width={400} height={300} data={data} >
-        <Line type="monotone" dataKey="bpm" stroke="#8884d8"/>
+      <LineChart width={300} height={300} data={data}>
+        <Line type="monotone" dataKey="bpm" stroke="#73A9AD" dot={false} strokeWidth="3" fill="#898AA6"/>
         <CartesianGrid strokeDasharray="3 3" vertical={false}/>
+        <Tooltip />
         <XAxis dataKey="time" tickFormatter={formatTime} fontSize="10" tickCount={4}/>
         <YAxis dataKey="bpm" domain={['dataMin - 2', 'dataMax + 2']} fontSize="10" tickCount={5}/>
       </LineChart>
@@ -36,8 +37,10 @@ const SleepTrendChart = ({data}) => {
   return (
     // <div>
     //   <h4>Sleep Score Trend</h4>
-        <LineChart width={400} height={300} data={data}>
-          <Line type="monotone" dataKey="dailyScore" stroke="#8884d8"/>
+        <LineChart width={300} height={300} data={data}>
+          <Line type="monotone" dataKey="dailyScore" stroke="#8884d8" />
+          <Tooltip />
+          <CartesianGrid strokeDasharray="3 3" vertical={false}/>
           <XAxis dataKey="startTimeDate" tickFormatter={formatDate} fontSize="10"/>
           <YAxis domain={['dataMin - 2', 'dataMax + 2']} fontSize="10" />
         </LineChart>
@@ -49,10 +52,10 @@ const SleepDurationSleepScoreTrend = ({data}) => {
   return (
     <div>
       <p>Sleep Duration vs sleep score</p>
-      <ComposedChart  width={400} height={400}  data={data} 
+      <ComposedChart  width={300} height={300}  data={data} 
       margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
         <XAxis dataKey="startTimeDate" tickFormatter={formatDate} fontSize="10"/>
-        <YAxis fontSize="10" label={false} domain={['dataMin - 5', 'dataMax + 5']}/>
+        <YAxis fontSize="10" label={false} domain={['dataMin - 5', 'dataMax + 5']} hide />
         <defs>
           <linearGradient id="colorDuration" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#FFD4B2" stopOpacity={0.5}/>
@@ -70,8 +73,6 @@ const SleepDurationSleepScoreTrend = ({data}) => {
 }
 
 export default function SleepStats({ data }) {
-  // const [data, setData] = useState(null)
-  // console.log('props>>>>>>', props)
  const sleepStatusData = (data) => {
   const sleepStats = []
   if (data) {
@@ -79,25 +80,30 @@ export default function SleepStats({ data }) {
     if(dataItems.awake_duration_sec) sleepStats.push({
       name: 'Awake',
       sec: dataItems.awake_duration_sec,
-      label: toTime(dataItems.awake_duration_sec)
+      label: toTime(dataItems.awake_duration_sec),
+      fill: '#D6EFED'
     })
 
     if(dataItems.light_duration_sec) sleepStats.push({
       name: 'Light',
       sec: dataItems.light_duration_sec,
-      label: toTime(dataItems.light_duration_sec)
+      label: toTime(dataItems.light_duration_sec),
+      fill: '#B7D3DF'
     })
 
     if(dataItems.deep_duration_sec) sleepStats.push({
         name: 'Deep',
         sec: dataItems.deep_duration_sec,
-        label: toTime(dataItems.deep_duration_sec)
+        label: toTime(dataItems.deep_duration_sec),
+        fill: '#898AA6'
     })
 
     if(dataItems.rem_duration_sec) sleepStats.push({
       name: 'REM',
       sec: dataItems.rem_duration_sec,
-      label: toTime(dataItems.rem_duration_sec)
+      label: toTime(dataItems.rem_duration_sec),
+      fill: '#C9BBCF'
+
     })
 
     // if(dataItems.total_duration_sec) sleepStats.push({
@@ -121,9 +127,15 @@ export default function SleepStats({ data }) {
       <hr></hr>
       <SleepDurationSleepScoreTrend data={data}/>
       <hr></hr>
-      {data && _.last(data).heartRateData ? <HeartRateChart data={_.last(data).heartRateData}/> : ''}
-      <h4>Data for {data && _.last(data).startTimeDate}</h4>
-      {data && _.last(data).hypnogram_reading > 2 ? <SleepStatusBarChart data={data && sleepStatusData(data)}/> : ''}
+      {data && _.last(data).heartRateData ?
+      <HeartRateChart data={_.last(data).heartRateData}/> : ''}
+      <hr></hr>
+      <h4>Latest Sleep Stats</h4>
+      <br></br>
+      {data && _.last(data).hypnogram_reading > 2 ?
+      <SleepStatusBarChart data={data && sleepStatusData(data)}/> : ''}
+      <hr></hr>
+      <br/>
       Sleep Duration: {data && toTime(_.last(data).total_duration_sec)}<br/>
       Asleep/In Bed: {data && Math.round(100 * _.last(data).durationAsleepState / _.last(data).durationInBed) || 100}%<br/>
       WakeUps: {data && _.last(data).disturbance}<br/>

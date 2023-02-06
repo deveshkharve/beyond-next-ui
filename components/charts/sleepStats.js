@@ -9,7 +9,7 @@ export default function SleepStatusBarChart ({data}) {
  }
 	return (
       <div className="container">
-       <BarChart width={400} height={300} data={data} layout="horizontal" >
+       <BarChart width={300} height={300} data={data} layout="horizontal" >
           <Bar dataKey="sec" layout="horizontal" width={1} domain={['dataMin - 2', 'dataMax + 2']}/>
           <XAxis dataKey="name" />
           <YAxis tickFormatter={toTime}/>
