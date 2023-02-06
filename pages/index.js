@@ -6,7 +6,7 @@ import styles from '../styles/Home.module.css';
 export async function getServerSideProps(context) {
   console.log('query>>>>>>', context.query)
   const accesstoken = context.query.accesstoken
-  const results = await fetchSleepDetails(accesstoken, '2023-01-20', '2023-01-27')
+  const results = await fetchSleepDetails(accesstoken)
   .catch(error => {
     console.log(error)
   })
