@@ -22,7 +22,7 @@ export default function Home({data}) {
 
       <main>
         <div className={styles.card}>
-            {data ? <SleepStats data={data}/> : <p>Data not available</p> }
+            {data ? <SleepStats data={data}/> : <div>Data not available</div> }
         </div>
       </main>
       <style jsx>{`

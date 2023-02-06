@@ -1,19 +1,35 @@
-import { XAxis, YAxis, BarChart, Bar } from 'recharts';
+import { XAxis, YAxis, BarChart, Bar, LabelList } from 'recharts';
 import _ from "lodash";
 
-export default function SleepStatusBarChart ({data}) {
+const SleepStatusBarChart = ({data}) => {
   const toTime = (seconds) => {
-    var date = new Date(null)
-    date.setSeconds(seconds)
-    return `${date.getHours()}hr ${date.getMinutes() ? `${date.getMinutes()}m`: ''}`
- }
+    const totalMin = seconds / 60
+    const hours = Math.round(totalMin/60)
+    const minutes = Math.round(totalMin%60)
+    return `${hours ? `${hours}hr` : ''} ${minutes ? `%{minutes}min`: ''}`
+  }
 	return (
       <div className="container">
        <BarChart width={300} height={300} data={data} layout="horizontal" >
-          <Bar dataKey="sec" layout="horizontal" width={1} domain={['dataMin - 2', 'dataMax + 2']}/>
+          <Bar dataKey="sec" layout="horizontal" width={1} domain={['dataMin - 2', 'dataMax + 100']}>
+          <LabelList dataKey="label" position="top" fontSize={12} stroke="#666" />
+          </Bar>
           <XAxis dataKey="name" />
-          <YAxis tickFormatter={toTime}/>
+          <YAxis type="number" tickFormatter={toTime} hide />
         </BarChart>
     </div>
   )
+}
+
+const SleepHypnogramDataNotaAvailable = () => {
+  return (
+    <div>
+      <h4>Hynogram data not available</h4>
+    </div>
+  )
+}
+
+export {
+  SleepStatusBarChart, 
+  SleepHypnogramDataNotaAvailable
 }
