@@ -1,21 +1,15 @@
 import { XAxis, YAxis, BarChart, Bar, LabelList } from 'recharts';
 import _ from "lodash";
 
-const SleepStatusBarChart = ({data}) => {
-  const toTime = (seconds) => {
-    const totalMin = seconds / 60
-    const hours = Math.round(totalMin/60)
-    const minutes = Math.round(totalMin%60)
-    return `${hours ? `${hours}hr` : ''} ${minutes ? `%{minutes}min`: ''}`
-  }
+const SleepStatusBarChart = ({data, secToTime}) => {
 	return (
       <div className="container">
        <BarChart width={300} height={300} data={data} layout="horizontal" >
           <Bar dataKey="sec" layout="horizontal" width={1} domain={['dataMin - 2', 'dataMax + 100']}>
-          <LabelList dataKey="label" position="top" fontSize={12} stroke="#666" />
+            <LabelList dataKey="label" position="top" fontSize={12} stroke="#666" />
           </Bar>
           <XAxis dataKey="name" />
-          <YAxis type="number" tickFormatter={toTime} hide />
+          <YAxis type="number" tickFormatter={secToTime} hide />
         </BarChart>
     </div>
   )

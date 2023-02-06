@@ -6,7 +6,7 @@ const SleepTrendChart = ({data, formatDate}) => {
       <Line type="monotone" dataKey="dailyScore" stroke="#8884d8" />
       <Tooltip />
       <CartesianGrid strokeDasharray="3 3" vertical={false}/>
-      <XAxis dataKey="startTimeDate" tickFormatter={formatDate} fontSize="10"/>
+      <XAxis dataKey="endTimeDate" tickFormatter={formatDate} fontSize="10"/>
       <YAxis domain={['dataMin - 2', 'dataMax + 2']} fontSize="10" />
     </LineChart>
   )
@@ -18,7 +18,7 @@ const SleepDurationSleepScoreTrend = ({data, formatDate}) => {
       Sleep Duration vs sleep score
       <ComposedChart  width={300} height={300}  data={data} 
       margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-        <XAxis dataKey="startTimeDate" tickFormatter={formatDate} fontSize="10"/>
+        <XAxis dataKey="endTimeDate" tickFormatter={formatDate} fontSize="10"/>
         <YAxis fontSize="10" label={false} domain={['dataMin - 5', 'dataMax + 5']} hide />
         <defs>
           <linearGradient id="colorDuration" x1="0" y1="0" x2="0" y2="1">
