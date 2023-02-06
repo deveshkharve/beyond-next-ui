@@ -4,11 +4,10 @@ import SleepStats from '../components/charts';
 import styles from '../styles/Home.module.css';
 
 export async function getServerSideProps(context) {
-  console.log('query>>>>>>', context.query)
   const accesstoken = context.query.accesstoken
   const results = await fetchSleepDetails(accesstoken)
   .catch(error => {
-    console.log(error)
+    console.log({ errroMessage: error.message }, 'Unable to fetch sleep details')
   })
   return { props: { data: results ? results.data : null } }
 }

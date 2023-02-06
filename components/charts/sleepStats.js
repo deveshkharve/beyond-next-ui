@@ -2,7 +2,6 @@ import { XAxis, YAxis, BarChart, Bar } from 'recharts';
 import _ from "lodash";
 
 export default function SleepStatusBarChart ({data}) {
-  console.log('data>>>>', data)
   const toTime = (seconds) => {
     var date = new Date(null)
     date.setSeconds(seconds)
@@ -10,8 +9,8 @@ export default function SleepStatusBarChart ({data}) {
  }
 	return (
       <div className="container">
-       <BarChart width={400} height={400} data={data} layout="horizontal">
-          <Bar dataKey="sec" layout="horizontal"/>
+       <BarChart width={400} height={300} data={data} layout="horizontal" >
+          <Bar dataKey="sec" layout="horizontal" width={1} domain={['dataMin - 2', 'dataMax + 2']}/>
           <XAxis dataKey="name" />
           <YAxis tickFormatter={toTime}/>
         </BarChart>

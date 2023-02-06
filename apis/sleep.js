@@ -8,7 +8,6 @@ export const fetchSleepDetails = async (userToken, startDate, endDate) => {
   if (startDate) {
     data = { startDate, endDate }
   }
-  console.log('setting header>>>>>', userToken)
   const results = await axios.post(url, data, {
     headers: {
       accesstoken: userToken
@@ -16,6 +15,5 @@ export const fetchSleepDetails = async (userToken, startDate, endDate) => {
   }).catch(error => {
     throw error
   })
-  console.log('result>>>>>>>', results?.data)
   return results && results.data ? results.data : null
 }
