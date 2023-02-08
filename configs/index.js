@@ -1,1 +1,1 @@
-export const BEYOND_HOST  = 'https://staging.getbeyondhealth.com'
+export const BEYOND_HOST  = 'https://api.getbeyondhealth.com'
