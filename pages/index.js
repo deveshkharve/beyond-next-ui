@@ -23,9 +23,10 @@ export default function Home({data}) {
       </Head>
 
       <main>
-        <div className={styles.card}>
-            { PAGE_ENABLED ? data ? <SleepStats data={data}/> : <div>Data not available</div> : '' }
-        </div>
+      { PAGE_ENABLED ? (<div className={styles.card}>
+            { data ? <SleepStats data={data}/> : <div>Data not available</div> }
+        </div>) : ''}
+        
       </main>
       <style jsx>{`
         main {
