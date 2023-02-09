@@ -1,9 +1,11 @@
 import Head from 'next/head';
 import { fetchSleepDetails } from '../apis/sleep';
 import SleepStats from '../components/charts';
+import { PAGE_ENABLED } from '../configs';
 import styles from '../styles/Home.module.css';
 
 export async function getServerSideProps(context) {
+  if (!PAGE_ENABLED) return {props: { data: null }}
   const accesstoken = context.query.accesstoken
   const results = await fetchSleepDetails(accesstoken)
   .catch(error => {
@@ -22,7 +24,7 @@ export default function Home({data}) {
 
       <main>
         <div className={styles.card}>
-            {data ? <SleepStats data={data}/> : <div>Data not available</div> }
+            { PAGE_ENABLED ? data ? <SleepStats data={data}/> : <div>Data not available</div> : '' }
         </div>
       </main>
       <style jsx>{`
