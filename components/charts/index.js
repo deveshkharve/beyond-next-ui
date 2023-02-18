@@ -2,16 +2,36 @@ import _ from "lodash";
 import { SleepStatusBarChart, SleepHypnogramDataNotaAvailable } from "./sleepStats";
 import { HeartRateChart, HeartRateChartNotAvailable } from './heartRate';
 import { SleepDurationSleepScoreTrend, SleepTrendChart } from './sleepTrends';
+import { useState } from "react";
 
 
 
 
 export default function SleepStats({ data }) {
+  // console.log(data)
+  const [ sleepDetailsData, setSleepDetailsData ] = useState(_.last(data));
+  const [ sleepDetailsDataIndex, setSleepDetailsDataIndex ] = useState(data.length ? data.length - 1 : 0);
+  
+  const previousSleepDataDetails = () => {
+    if (sleepDetailsDataIndex > 0) {
+      setSleepDetailsData(data[sleepDetailsDataIndex - 1])
+      setSleepDetailsDataIndex(sleepDetailsDataIndex - 1)
+      // console.log('previous day', sleepDetailsDataIndex, data[sleepDetailsDataIndex - 1])
+    }
+  }
 
-  const sleepStatusData = (data) => {
+  const nextSleepDataDetails = () => {
+    if (sleepDetailsDataIndex < data.length - 1) {
+      setSleepDetailsData(data[sleepDetailsDataIndex + 1])
+      setSleepDetailsDataIndex(sleepDetailsDataIndex + 1)
+      // console.log('next day', sleepDetailsDataIndex, data[sleepDetailsDataIndex + 1])
+    }
+  }
+
+  const sleepStatusData = (sleepData) => {
   const sleepStats = []
   if (data) {
-    const dataItems = _.pick(_.last(data), ['awake_duration_sec', 'light_duration_sec', 'deep_duration_sec', 'rem_duration_sec', 'total_duration_sec'])
+    const dataItems = _.pick(sleepData, ['awake_duration_sec', 'light_duration_sec', 'deep_duration_sec', 'rem_duration_sec', 'total_duration_sec'])
     if(dataItems.awake_duration_sec) sleepStats.push({
       name: 'Awake',
       sec: dataItems.awake_duration_sec,
@@ -40,7 +60,7 @@ export default function SleepStats({ data }) {
       fill: '#C9BBCF'
 
     })
-    console.log(sleepStats)
+    // console.log(sleepStats)
     // if(dataItems.total_duration_sec) sleepStats.push({
     //   name: 'Total',
     //   sec: dataItems.total_duration_sec,
@@ -64,7 +84,6 @@ export default function SleepStats({ data }) {
     const totalMin = seconds / 60
     const hours = Math.floor(totalMin / 60)
     const minutes = Math.floor(totalMin % 60)
-    console.log(seconds, totalMin)
     return `${hours ? `${hours}hr` : ''} ${minutes ? `${minutes}min`: ''}`
   }
   
@@ -80,19 +99,21 @@ export default function SleepStats({ data }) {
       <hr></hr>
       <SleepDurationSleepScoreTrend data={data} formatDate={formatDate} />
       <hr></hr>
-      {data && _.last(data).heartRateData ?
-      <HeartRateChart data={_.last(data).heartRateData} formatTime={formatTime}/> : ''}
+      <h4>Latest Sleep Stats {sleepDetailsData.endTimeDate}</h4>
+      <button disabled={sleepDetailsDataIndex <= 0} onClick={previousSleepDataDetails}>prev</button>
+      <button disabled={sleepDetailsDataIndex >= data.length -1} onClick={nextSleepDataDetails}>next</button>
+      {data && sleepDetailsData.heartRateData ?
+      <HeartRateChart data={sleepDetailsData.heartRateData} formatTime={formatTime}/> : ''}
       <hr></hr>
-      <h4>Latest Sleep Stats</h4>
       <br></br>
-      {data && _.last(data).hypnogram_reading > 2 ?
-      <SleepStatusBarChart data={data && sleepStatusData(data)} secToTime={secToTime}/> : <SleepHypnogramDataNotaAvailable/>}
+      {data && sleepDetailsData.hypnogram_reading > 2 ?
+      <SleepStatusBarChart data={data && sleepStatusData(sleepDetailsData)} secToTime={secToTime}/> : <SleepHypnogramDataNotaAvailable/>}
       <hr></hr>
       <br/>
-      Sleep Duration: {data && secToTime(_.last(data).durationAsleepState)}<br/>
-      Asleep/In Bed: {data && Math.round(100 * _.last(data).durationAsleepState / _.last(data).durationInBed) || 100}%<br/>
-      WakeUps: {data && _.last(data).disturbance}<br/>
-      Min Heart Rate: {data && _.last(data).min_heart_rate_reading}<br/>
+      Sleep Duration: {data && secToTime(sleepDetailsData.durationAsleepState)}<br/>
+      Asleep/In Bed: {data && Math.round(100 * sleepDetailsData.durationAsleepState / sleepDetailsData.durationInBed) || 100}%<br/>
+      WakeUps: {data && sleepDetailsData.disturbance}<br/>
+      Min Heart Rate: {data && sleepDetailsData.min_heart_rate_reading}<br/>
     </div>
   )
 }

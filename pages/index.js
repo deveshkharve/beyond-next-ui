@@ -7,7 +7,7 @@ import styles from '../styles/Home.module.css';
 export async function getServerSideProps(context) {
   if (!PAGE_ENABLED) return {props: { data: null }}
   const accesstoken = context.query.accesstoken
-  const results = await fetchSleepDetails(accesstoken)
+  const results = await fetchSleepDetails(accesstoken)//, '2023-02-07', '2023-02-16')
   .catch(error => {
     console.log({ errroMessage: error.message }, 'Unable to fetch sleep details')
   })
