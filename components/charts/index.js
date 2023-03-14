@@ -2,6 +2,7 @@ import _ from "lodash";
 import { SleepStatusBarChart, SleepHypnogramDataNotaAvailable } from "./sleepStats";
 import { HeartRateChart, HeartRateChartNotAvailable } from './heartRate';
 import { SleepDurationSleepScoreTrend, SleepTrendChart } from './sleepTrends';
+import styles from '../../styles/Home.module.css';
 
 
 
@@ -11,6 +12,8 @@ export default function SleepStats({ data }) {
   const sleepStatusData = (data) => {
   const sleepStats = []
   if (data) {
+    console.log("DATA BEING PRINTED");
+    console.log(data);
     const dataItems = _.pick(_.last(data), ['awake_duration_sec', 'light_duration_sec', 'deep_duration_sec', 'rem_duration_sec', 'total_duration_sec'])
     if(dataItems.awake_duration_sec) sleepStats.push({
       name: 'Awake',
@@ -50,6 +53,7 @@ export default function SleepStats({ data }) {
   return sleepStats
  }
 
+
  const formatDate = (value, index) => {
   const dateArr = `${value}`.split('-')
   return `${dateArr[2]}/${dateArr[1]}`
@@ -67,17 +71,35 @@ export default function SleepStats({ data }) {
     console.log(seconds, totalMin)
     return `${hours ? `${hours}hr` : ''} ${minutes ? `${minutes}min`: ''}`
   }
+
+  console.log("DATA BEING PRINTED");
+    console.log(data);
+  const dailyScore = _.last(data).dailyScore;
+  const lastSleepDate = new Date(_.last(data).endTime);
   
   return (
     <div>
-      <div>
-          <div><h3>Sleep</h3></div>
-          <div><h4>{data && _.last(data).dailyScore}</h4></div>
-      </div>
-      <hr></hr>
-      <br></br>
+      <div className="card container d-flex" style={{ border:0}}>
+            <div className="heading-section row p-0 pt-3 pb-3 justify-content-end">
+            <div className="text-center p-0" style={{width:72, height:72}}>
+              <div className="card p-1 pt-2 pb-2 justify-content-center bioage-card" style={{width:72, height:72}}>
+              <h3 className="score">36.1</h3>
+              <p className="score-date" style={{margin:0}}>BioAge</p>
+              </div>
+            </div>
+            </div>
+              </div>
+      <div className="sleep-card card container d-flex">
+          <div className="heading-section row p-3">
+          
+            <div className="col-7"><h3 className="section-heading">Sleep Score</h3></div>
+            <div className="col-5 text-end">
+              <h4 className="score">{data && dailyScore}</h4>
+              <p className="score-date">{data && lastSleepDate.toDateString()}</p>
+            </div>
+          </div>
       <SleepTrendChart data={data} formatDate={formatDate} />
-      <hr></hr>
+      </div>
       <SleepDurationSleepScoreTrend data={data} formatDate={formatDate} />
       <hr></hr>
       {data && _.last(data).heartRateData ?
